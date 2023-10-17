@@ -1,19 +1,29 @@
 # Sync folder deamon
 
-my-folder-sync/
-    ├── cmd/
-    │   ├── watcher/
-    │   │   └── main.go
-    │   └── synchronizer/
-    │       └── main.go
-    ├── config.json
-    ├── sync/
-    │   ├── sync.go
-    │   └── network/
-    │       ├── network.go
-    └── watcher/
-        ├── watcher.go
-        └── event/
-            ├── event.go
+Simple watcher deamon for sync folder.
+Splitted to 2 parts:
 
-`watcher/watcher.go` and `watcher/event/event.go`
+- watcher
+- syncer
+
+## How to use
+
+build watcher
+build syncer
+
+For watcher also need config.json file with folder descriprions:
+
+```json
+{
+  "source_path": "C:\\tmp\\folder_src",
+  "network_path": "C:\\tmp\\folder_dst"
+}
+```
+
+## Watcher
+
+run watcher
+
+## Syncer
+
+run syncer periodically.
