@@ -1,9 +1,11 @@
 package watcher
 
 import (
+	"fmt"
 	"folder-sync-deamon/sync/network"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 
 	"github.com/fsnotify/fsnotify"
@@ -25,6 +27,35 @@ func NewWatcher(sourcePath, networkPath string) (*Watcher, error) {
 		networkPath: networkPath,
 		watcher:     watcher,
 	}, nil
+}
+
+func executeExternalExecutable() error {
+
+	currentDir, err := os.Getwd()
+	if err != nil {
+		fmt.Printf("Error getting current directory: %v\n", err)
+		return err
+	}
+
+	fmt.Printf("Current directory: %s\n", currentDir)
+	cmd := exec.Command(currentDir + "\\synchronizer.exe")
+
+	// You can set environment variables or provide arguments to the executable if needed
+	// cmd.Env = []string{"VAR_NAME=value"}
+	// cmd.Args = []string{"arg1", "arg2"}
+
+	cmd.Dir = "." // Set the working directory if necessary
+
+	// Capture the standard output and standard error streams if needed
+	// cmd.Stdout = os.Stdout
+	// cmd.Stderr = os.Stderr
+
+	if err := cmd.Run(); err != nil {
+		log.Printf("Error executing external executable: %v", err)
+		return err
+	}
+
+	return nil
 }
 
 func (w *Watcher) Start() {
@@ -54,6 +85,7 @@ func (w *Watcher) Start() {
 				// Implement synchronization logic with network
 				// You can call the synchronization function in the network package here.
 				network.SynchronizeWithNetwork(w.sourcePath, w.networkPath, event.Name)
+				executeExternalExecutable()
 			}
 
 		case err, ok := <-w.watcher.Errors:
